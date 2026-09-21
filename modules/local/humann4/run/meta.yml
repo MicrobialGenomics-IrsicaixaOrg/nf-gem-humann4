@@ -1,0 +1,82 @@
+name: humann4_run
+description: Profile preprocessed reads with HUMAnN 4 using an existing MetaPhlAn profile
+keywords: [metagenomics, functional profiling, humann]
+tools:
+  - humann:
+      description: HUMAnN functional profiling
+      homepage: https://github.com/biobakery/humann
+      documentation: https://github.com/biobakery/humann
+      licence: [MIT]
+      identifier: biotools:humann
+input:
+  - - meta:
+        type: map
+        description: Sample metadata with id and single_end
+    - reads:
+        type: file
+        description: One or two quality-filtered, host-depleted FASTQs
+        pattern: '*.{fastq,fq}.gz'
+    - profile:
+        type: file
+        description: Individual MetaPhlAn rel_ab_w_read_stats profile
+        pattern: '*.{tsv,txt}'
+  - staged_db:
+      type: directory
+      description: ChocoPhlAn, protein and utility directories in fixed order, or empty
+  - shared_db:
+      type: list
+      description: Three absolute worker-mounted directory strings, or empty
+  - index:
+      type: string
+      description: Required MetaPhlAn database index
+  - save_temp:
+      type: boolean
+      description: Whether to retain and publish HUMAnN intermediates
+output:
+  genefamilies:
+    - - meta:
+          type: map
+      - '*_2_genefamilies.tsv':
+          type: file
+  reactions:
+    - - meta:
+          type: map
+      - '*_3_reactions.tsv':
+          type: file
+  pathabundance:
+    - - meta:
+          type: map
+      - '*_4_pathabundance.tsv':
+          type: file
+  profile:
+    - - meta:
+          type: map
+      - '*_1_metaphlan_profile.tsv':
+          type: file
+  log:
+    - - meta:
+          type: map
+      - '*_0.log':
+          type: file
+  validation:
+    - - meta:
+          type: map
+      - '*_validation.json':
+          type: file
+  temp:
+    - - meta:
+          type: map
+      - '*_humann_temp*':
+          type: directory
+  qc:
+    - - meta:
+          type: map
+      - "*_mqc.json":
+          type: file
+          description: Native HUMAnN alignment QC for MultiQC
+  versions:
+    - versions.yml:
+        type: file
+        description: Software versions used by this task
+maintainers:
+  - MicrobialGenomics-IrsicaixaOrg

@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: nf-core/setup-nextflow@v2
+        with:
+          version: '25.10.2'
+      - name: Validate profile handling
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Build pinned HUMAnN runtime
+        run: docker build -f containers/humann4/Dockerfile -t humann4:test .
+      - name: Prepare demo inputs
+        run: docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:$PWD" -w "$PWD" humann4:test python tests/prepare_demo.py
+      - name: Execute real demo with staged databases
+        run: nextflow run . -profile test,docker --humann_container humann4:test --outdir results-test -ansi-log false
+      - name: Validate biological output structure
+        run: python tests/assert_outputs.py results-test
+      - name: Verify resume caching
+        run: |
+          nextflow run . -profile test,docker --humann_container humann4:test --outdir results-test -resume -ansi-log false
+          python tests/check_resume.py results-test/pipeline_info
+      - name: Execute shared-database mode
+        run: |
+          printf "docker.runOptions = '-u $(id -u):$(id -g) -v $PWD/tests/data:$PWD/tests/data:ro'\n" > shared-test.config
+          nextflow run . -profile test,docker -c shared-test.config --database_mode shared --humann_container humann4:test --outdir results-shared -ansi-log false
+          python tests/assert_outputs.py results-shared
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-reports
+          path: |
+            .nextflow.log*
+            results-test/pipeline_info
+            results-shared/pipeline_info
+            results-test/humann4/*/*_0.log
+            results-shared/humann4/*/*_0.log

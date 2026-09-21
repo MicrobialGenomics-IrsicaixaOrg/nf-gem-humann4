@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,taxonomic_profile
+SAMPLE,s3://results/analysis_ready_fastqs/sample_R1.fastq.gz,s3://results/analysis_ready_fastqs/sample_R2.fastq.gz,s3://results/metaphlan/sample_profile.txt

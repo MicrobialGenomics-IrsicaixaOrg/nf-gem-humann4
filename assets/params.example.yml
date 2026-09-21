@@ -1,0 +1,8 @@
+input: samplesheet.csv
+outdir: s3://YOUR-RESULTS-BUCKET/humann4/run01
+nucleotide_db: s3://YOUR-REFERENCE-BUCKET/humann4/v4_alpha/chocophlan/
+protein_db: s3://YOUR-REFERENCE-BUCKET/humann4/v4_alpha/protein/
+utility_db: s3://YOUR-REFERENCE-BUCKET/humann4/v4_alpha/utility_mapping/
+database_mode: staged
+aws_queue: YOUR-BATCH-QUEUE
+aws_region: eu-west-1

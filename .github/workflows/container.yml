@@ -1,0 +1,23 @@
+name: Publish HUMAnN container
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: containers/humann4/Dockerfile
+          push: true
+          tags: ghcr.io/microbialgenomics-irsicaixaorg/nf-gem-humann4:4.0.0a2

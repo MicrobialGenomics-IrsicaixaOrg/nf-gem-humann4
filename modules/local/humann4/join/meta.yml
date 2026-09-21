@@ -1,0 +1,34 @@
+name: humann4_join
+description: Join native HUMAnN feature tables and separate taxonomically stratified features
+keywords: [metagenomics, functional profiling, humann]
+tools:
+  - humann:
+      description: HUMAnN table utilities
+      homepage: https://github.com/biobakery/humann
+      documentation: https://github.com/biobakery/humann
+      licence: [MIT]
+      identifier: biotools:humann
+input:
+  - genes:
+      type: file
+      description: Per-sample gene family tables
+      pattern: '*_2_genefamilies.tsv'
+  - reactions:
+      type: file
+      description: Per-sample reaction tables
+      pattern: '*_3_reactions.tsv'
+  - pathways:
+      type: file
+      description: Per-sample pathway abundance tables
+      pattern: '*_4_pathabundance.tsv'
+output:
+  tables:
+    - '*.tsv':
+        type: file
+        description: Joined tables and stratified/unstratified tables with native units
+  versions:
+    - versions.yml:
+        type: file
+        description: HUMAnN version
+maintainers:
+  - MicrobialGenomics-IrsicaixaOrg

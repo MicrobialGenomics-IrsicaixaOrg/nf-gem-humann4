@@ -1,0 +1,19 @@
+nextflow_pipeline {
+    name "HUMAnN 4 integration"
+    script "../main.nf"
+    tag "pipeline"
+    test("paired and single-end inputs reuse individual taxonomic profiles") {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assert workflow.success
+            assert path("$outputDir/pipeline_info/humann4_software_mqc_versions.yml").text.contains("4.0.0.alpha.2")
+            assert path("$outputDir/humann4/demo_a/demo_a_2_genefamilies.tsv").exists()
+            assert path("$outputDir/humann4/demo_b/demo_b_4_pathabundance.tsv").exists()
+            assert path("$outputDir/tables/pathabundance.tsv").exists()
+        }
+    }
+}

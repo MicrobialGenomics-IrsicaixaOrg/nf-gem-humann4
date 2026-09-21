@@ -1,0 +1,12 @@
+name: humann4
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11.11
+  - pip=25.0.1
+  - packaging=24.2
+  - bowtie2=2.5.4
+  - diamond=2.1.10
+  - glpk=5.0
+  - procps-ng=4.0.4
