@@ -10,7 +10,7 @@ R1 and R2 are concatenated within the HUMAnN task as gzip members; HUMAnN does n
 
 ## Runtime and databases
 
-Build `containers/humann4/Dockerfile` or use the image published by the repository's **Publish HUMAnN container** action. The runtime pins HUMAnN 4.0.0a2 with its official wheel SHA-256, Python, MetaPhlAn, Bowtie2, DIAMOND and GLPK versions. The base image is pinned by digest; transitive conda/Python packages are not fully locked; pin the resulting container digest in `humann_container` for production. MetaPhlAn is installed because HUMAnN checks for the executable even when an external profile is supplied; it is not rerun. The image contains packaged demo data, not the full production references.
+The pipeline defaults to the public Linux AMD64 image `francesccatala/nf-gem-humann4:4.0.0a2@sha256:317965c67e022321706dd0ffd1fc2dbe236f993331dd24cbff4cddf98d3ec528`. Rebuild it with `containers/humann4/Dockerfile` when changing the runtime. The runtime pins HUMAnN 4.0.0a2 with its official wheel SHA-256, Python, MetaPhlAn, Bowtie2, DIAMOND and GLPK versions. The base image is pinned by digest; transitive conda/Python packages are not fully locked; pin the resulting container digest in `humann_container` for production. MetaPhlAn is installed because HUMAnN checks for the executable even when an external profile is supplied; it is not rerun. The image contains packaged demo data, not the full production references.
 
 Download production references using this HUMAnN version:
 
@@ -33,7 +33,7 @@ HUMAnN requests 16 CPUs, 64 GB and 24 hours, capped using Nextflow `process.reso
 - `staged`: local/S3 directories are staged normally by Nextflow for each sample. This needs no new infrastructure, but copies may be repeated per task and references consume worker scratch. Use for the pilot and measure overhead.
 - `shared`: pass absolute **worker-local** directories as strings. Nextflow does not copy them. All workers and containers must already see a read-only reference mount at these paths. Configure your Batch job/container mounts separately; selecting this option does not create EFS, FSx, EBS caches or mounts. Keep reference directories immutable for correct resume behaviour. Change paths when updating a reference version.
 
-For a private GHCR package, configure private-registry authentication for the Batch workers, or mirror the tested image into private ECR in the Batch region and set `humann_container` to its digest. A local `docker login` does not authenticate Batch workers. Publishing the repository image does not alter queue credentials.
+The default Docker Hub image is public. For large Batch runs, an ECR mirror in the Batch region can avoid Docker Hub pull-rate limits; set `humann_container` to the mirror digest. Private images require worker-side registry access; a local `docker login` does not authenticate Batch workers.
 
 ## Resuming and provenance
 

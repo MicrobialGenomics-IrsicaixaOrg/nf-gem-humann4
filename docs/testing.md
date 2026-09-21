@@ -12,4 +12,4 @@ The fixture contains 10,000 reads from the pinned HUMAnN package and an explicit
 
 A `-stub-run` verifies process wiring but does not compute biological results. The real-output assertions deliberately reject stub logs.
 
-The separate container publication workflow requires manual dispatch. A newly created GHCR package may initially be private even for a public repository; set package visibility and access explicitly. Mirror its image into ECR or configure Batch registry authentication for cloud execution.
+The tested image is public on Docker Hub as `francesccatala/nf-gem-humann4:4.0.0a2`; the pipeline pins its immutable digest. The separate container publication workflow requires manual dispatch and repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` with push access to that repository. These secrets are not configured by a local Docker login. After rebuilding, verify the new image before updating the pipeline digest.

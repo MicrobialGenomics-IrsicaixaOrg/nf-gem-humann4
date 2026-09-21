@@ -15,7 +15,7 @@ nextflow run MicrobialGenomics-IrsicaixaOrg/nf-gem-humann4 -r main \
   -with-tower
 ```
 
-The HUMAnN runtime is defined in `containers/humann4/Dockerfile`; build it or publish it using the container workflow before the first run. For AWS, use an accessible image (for example in ECR) via `--humann_container`. Use a released tag or commit SHA for production. Copy `assets/params.example.yml` and `assets/awsbatch.example.config`, then set your paths and existing queue. Local execution uses `-profile docker` with local paths. Nextflow requires Java 17+ and Nextflow >=25.04; CI uses 25.10.2.
+The tested Linux AMD64 image is public on [Docker Hub](https://hub.docker.com/r/francesccatala/nf-gem-humann4), tagged `4.0.0a2` and pinned by digest in the pipeline defaults. Its runtime is defined in `containers/humann4/Dockerfile`. AWS Batch can pull it directly; an ECR mirror can be selected via `--humann_container`. Use a released tag or commit SHA for production. Copy `assets/params.example.yml` and `assets/awsbatch.example.config`, then set your paths and existing queue. Local execution uses `-profile docker` with local paths. Nextflow requires Java 17+ and Nextflow >=25.04; CI uses 25.10.2.
 
 - [Inputs, databases and AWS](docs/usage.md)
 - [Outputs and interpretation](docs/output.md)
