@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:2.0.5@sha256:8d0d4cad074afe3ac93b58dce88bd2659153d3fa6de3a6968f501710e8d3c832@sha256:8d0d4cad074afe3ac93b58dce88bd2659153d3fa6de3a6968f501710e8d3c832
+FROM mambaorg/micromamba:2.0.5@sha256:8d0d4cad074afe3ac93b58dce88bd2659153d3fa6de3a6968f501710e8d3c832
 USER root
 RUN mkdir -p /opt/humann4 && chmod 755 /opt/humann4
 COPY --chown=$MAMBA_USER:$MAMBA_USER containers/humann4/environment.yml /tmp/environment.yml
