@@ -28,3 +28,8 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(self.check('#'+INDEX+'\n'+HEADER+'UNCLASSIFIED\t-1\t100\t-\t100\n')['sgbs'],0)
     def test_rejects_empty_profile(self):
         with self.assertRaises(ValueError): self.check('#'+INDEX+'\n'+HEADER)
+
+    def test_rejects_duplicate_taxa(self):
+        with self.assertRaises(ValueError): self.check('#'+INDEX+'\n'+HEADER+ROW+ROW)
+    def test_rejects_abundance_above_100(self):
+        with self.assertRaises(ValueError): self.check('#'+INDEX+'\n'+HEADER+ROW.replace('\t12\t','\t101\t'))

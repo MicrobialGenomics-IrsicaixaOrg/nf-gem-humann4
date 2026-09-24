@@ -7,6 +7,9 @@ permissions:
   contents: read
 jobs:
   integration:
+    strategy:
+      matrix:
+        nextflow: ['25.10.2', '26.04.4']
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -16,9 +19,11 @@ jobs:
           python-version: '3.11'
       - uses: nf-core/setup-nextflow@v2
         with:
-          version: '25.10.2'
+          version: ${{ matrix.nextflow }}
       - name: Validate profile handling
         run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Validate AWS URI handling without cloud jobs
+        run: nextflow run tests/validate_aws.nf -c nextflow.config --outdir /tmp/humann-validation -ansi-log false
       - name: Build pinned HUMAnN runtime
         run: docker build -f containers/humann4/Dockerfile -t humann4:test .
       - name: Prepare demo inputs
@@ -39,7 +44,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: integration-reports
+          name: integration-reports-${{ matrix.nextflow }}
           path: |
             .nextflow.log*
             results-test/pipeline_info

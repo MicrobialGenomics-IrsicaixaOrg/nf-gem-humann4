@@ -117,7 +117,7 @@ workflow PIPELINE_COMPLETION {
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    def multiqc_reports = multiqc_report.toList()
+    def multiqc_reports = multiqc_report
 
     //
     // Completion email and summary
@@ -163,10 +163,14 @@ def validateInputParameters() {
         }
     }
     if (workflow.profile.tokenize(',').contains('awsbatch')) {
-        if (!params.aws_queue) error('--aws_queue is required for AWS Batch')
-        if (workflow.workDir.toUri().getScheme() != 's3') error('AWS Batch requires an s3:// -work-dir')
-        if (!params.outdir.startsWith('s3://')) error('AWS Batch requires an s3:// --outdir')
+        validateAwsPaths(workflow.workDir, params.outdir, params.aws_queue)
     }
+}
+// Validate the URI rather than Path.toString(), which drops the S3 scheme.
+def validateAwsPaths(workDir, outdir, queue) {
+    if (!queue) error('--aws_queue is required for AWS Batch')
+    if (workDir.toUri().getScheme() != 's3') error('AWS Batch requires an s3:// -work-dir')
+    if (!outdir?.startsWith('s3://')) error('AWS Batch requires an s3:// --outdir')
 }
 //
 // Generate methods description for MultiQC

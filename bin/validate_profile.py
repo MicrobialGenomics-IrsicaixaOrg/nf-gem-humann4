@@ -13,6 +13,7 @@ def validate(path, index):
     version = None
     rows = 0
     sgbs = 0
+    seen = set()
     for line in Path(path).read_text().splitlines():
         if not line.strip():
             continue
@@ -30,7 +31,12 @@ def validate(path, index):
         if len(fields) != len(COLUMNS):
             raise ValueError('Malformed profile row')
         rows += 1
+        if fields[0] in seen:
+            raise ValueError('Duplicate taxon in individual profile')
+        seen.add(fields[0])
         if '|t__' in fields[0]:
+            if float(fields[2]) > 100:
+                raise ValueError('Relative abundance must not exceed 100 percent')
             for value in fields[2:]:
                 number = float(value)
                 if not math.isfinite(number) or number < 0:

@@ -12,12 +12,12 @@ workflow HUMANN4 {
     def staged = params.database_mode == 'staged'
     def paths = staged ? db.collect { file(it, checkIfExists: true) } : []
     HUMANN4_RUN(samples, paths, staged ? [] : db, params.metaphlan_index, params.save_temp)
-    HUMANN4_JOIN(HUMANN4_RUN.out.genefamilies.collect { it[1] },
-                HUMANN4_RUN.out.reactions.collect { it[1] },
-                HUMANN4_RUN.out.pathabundance.collect { it[1] })
+    HUMANN4_JOIN(HUMANN4_RUN.out.genefamilies.collect { it[1] }.map { files -> files.sort { a, b -> a.name <=> b.name } },
+                HUMANN4_RUN.out.reactions.collect { it[1] }.map { files -> files.sort { a, b -> a.name <=> b.name } },
+                HUMANN4_RUN.out.pathabundance.collect { it[1] }.map { files -> files.sort { a, b -> a.name <=> b.name } })
     versions = softwareVersionsToYAML(HUMANN4_RUN.out.versions.mix(HUMANN4_JOIN.out.versions))
         .collectFile(sort: true, newLine: true, name: 'humann4_software_mqc_versions.yml', storeDir: "${params.outdir}/pipeline_info")
-    MULTIQC(HUMANN4_RUN.out.qc.map { it[1] }.mix(versions).collect(),
+    MULTIQC(HUMANN4_RUN.out.qc.map { it[1] }.mix(versions).collect().map { files -> files.sort { a, b -> a.name <=> b.name } },
         [file("${projectDir}/assets/multiqc_config.yml")],
         params.multiqc_config ? [file(params.multiqc_config)] : [], params.multiqc_logo ? [file(params.multiqc_logo)] : [], [], [])
     emit:

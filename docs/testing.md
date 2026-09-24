@@ -13,3 +13,17 @@ The fixture contains 10,000 reads from the pinned HUMAnN package and an explicit
 A `-stub-run` verifies process wiring but does not compute biological results. The real-output assertions deliberately reject stub logs.
 
 The tested image is public on Docker Hub as `francesccatala/nf-gem-humann4:4.0.0a2`; the pipeline pins its immutable digest. The separate container publication workflow requires manual dispatch and repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` with push access to that repository. These secrets are not configured by a local Docker login. After rebuilding, verify the new image before updating the pipeline digest.
+
+### AWS validation and Nextflow compatibility
+
+CI exercises Nextflow 25.10.2 and 26.04.4. Before Docker integration, it runs
+`nextflow run tests/validate_aws.nf -c nextflow.config --outdir /tmp/humann-validation`.
+This test submits no processes: it accepts an S3 Path by its URI scheme and
+rejects local work/output paths and a missing Batch queue. It does not test IAM,
+worker storage or production reference staging.
+
+Profile unit tests reject duplicate taxa and out-of-range SGB percentages in
+addition to wrong database versions, missing columns and invalid numeric values.
+Collected table and MultiQC inputs are sorted by filename for stable resume keys.
+When testing multiple workflows from one directory, resume the intended run by
+name or session UUID; bare `-resume` selects the most recent session.
