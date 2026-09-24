@@ -164,7 +164,7 @@ def validateInputParameters() {
     }
     if (workflow.profile.tokenize(',').contains('awsbatch')) {
         if (!params.aws_queue) error('--aws_queue is required for AWS Batch')
-        if (!workflow.workDir.toString().startsWith('s3://')) error('AWS Batch requires an s3:// -work-dir')
+        if (workflow.workDir.toUri().getScheme() != 's3') error('AWS Batch requires an s3:// -work-dir')
         if (!params.outdir.startsWith('s3://')) error('AWS Batch requires an s3:// --outdir')
     }
 }
