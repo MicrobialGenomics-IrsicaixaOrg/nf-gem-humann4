@@ -78,7 +78,7 @@
                 },
                 "humann_container": {
                     "type": "string",
-                    "default": "francesccatala/nf-gem-humann4:4.0.0a2@sha256:317965c67e022321706dd0ffd1fc2dbe236f993331dd24cbff4cddf98d3ec528",
+                    "default": "francesccatala/nf-gem-humann4@sha256:317965c67e022321706dd0ffd1fc2dbe236f993331dd24cbff4cddf98d3ec528",
                     "description": "Versioned HUMAnN 4 container; a digest is recommended for production"
                 },
                 "save_temp": {

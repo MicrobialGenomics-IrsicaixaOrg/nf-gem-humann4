@@ -27,3 +27,8 @@ addition to wrong database versions, missing columns and invalid numeric values.
 Collected table and MultiQC inputs are sorted by filename for stable resume keys.
 When testing multiple workflows from one directory, resume the intended run by
 name or session UUID; bare `-resume` selects the most recent session.
+
+The runtime reference uses `image@sha256:...`, without a tag. The nf-amazon
+3.9.2 Batch job-definition name parser rejects the otherwise valid Docker
+`image:tag@sha256:...` form. Its actual parser was checked locally with both
+forms, without AWS submission; the unit test protects the configured default.

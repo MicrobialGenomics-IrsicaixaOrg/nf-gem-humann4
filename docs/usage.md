@@ -10,7 +10,7 @@ R1 and R2 are concatenated within the HUMAnN task as gzip members; HUMAnN does n
 
 ## Runtime and databases
 
-The pipeline defaults to the public Linux AMD64 image `francesccatala/nf-gem-humann4:4.0.0a2@sha256:317965c67e022321706dd0ffd1fc2dbe236f993331dd24cbff4cddf98d3ec528`. Rebuild it with `containers/humann4/Dockerfile` when changing the runtime. The runtime pins HUMAnN 4.0.0a2 with its official wheel SHA-256, Python, MetaPhlAn, Bowtie2, DIAMOND and GLPK versions. The base image is pinned by digest; transitive conda/Python packages are not fully locked; pin the resulting container digest in `humann_container` for production. MetaPhlAn is installed because HUMAnN checks for the executable even when an external profile is supplied; it is not rerun. The image contains packaged demo data, not the full production references.
+The pipeline defaults to the public Linux AMD64 image `francesccatala/nf-gem-humann4@sha256:317965c67e022321706dd0ffd1fc2dbe236f993331dd24cbff4cddf98d3ec528`. Rebuild it with `containers/humann4/Dockerfile` when changing the runtime. The runtime pins HUMAnN 4.0.0a2 with its official wheel SHA-256, Python, MetaPhlAn, Bowtie2, DIAMOND and GLPK versions. The base image is pinned by digest; transitive conda/Python packages are not fully locked; pin the resulting container digest in `humann_container` for production. MetaPhlAn is installed because HUMAnN checks for the executable even when an external profile is supplied; it is not rerun. The image contains packaged demo data, not the full production references.
 
 Download production references using this HUMAnN version:
 
